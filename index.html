@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitTracker - Build Better Habits</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #4CAF50;
+            --primary-dark: #388E3C;
+            --text-dark: #2e7d32;
+            --light-green: #e8f5e9;
+            --card-bg: #f1f8e9;
+            --card-border: #C8E6C9;
+            --progress-bar: #66BB6A;
+            --progress-empty: #c8e6c9;
+            --white: #ffffff;
+            --black: #000000;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--black);
+            line-height: 1.6;
+        }
+
+        section {
+            padding: 5rem 1.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--black);
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a.active {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(to right, #e0f7fa, #e8f5e9);
+            text-align: center;
+            padding: 7rem 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            color: var(--text-dark);
+        }
+
+        /* Habit List Section */
+        .habits-section {
+            background-color: var(--white);
+        }
+
+        .habits-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .habits-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .habit-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .habit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .habit-card.done {
+            opacity: 0.7;
+        }
+
+        .habit-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .habit-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .streak-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-weight: 700;
+            color: #ff6b00;
+            background-color: rgba(255, 107, 0, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .habit-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .custom-checkbox {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        input[type="checkbox"] {
+            display: none;
+        }
+
+        input[type="checkbox"]:checked + .custom-checkbox {
+            background-color: var(--primary-color);
+        }
+
+        input[type="checkbox"]:checked + .custom-checkbox::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--white);
+            font-weight: bold;
+        }
+
+        /* Streak & Progress Section */
+        .streak-section {
+            background-color: var(--light-green);
+        }
+
+        .streak-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .streak-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .streak-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-container {
+            margin-top: 1.5rem;
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .progress-bar {
+            height: 12px;
+            background-color: var(--progress-empty);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--progress-bar);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .week-bars {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+
+        .day-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bar {
+            width: 20px;
+            height: 100px;
+            background-color: var(--progress-empty);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: var(--progress-bar);
+            border-radius: 10px;
+            transition: height 0.5s ease;
+        }
+
+        .day-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Monthly View Section */
+        .calendar-section {
+            background-color: var(--white);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .calendar {
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+
+        .day {
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .day.empty {
+            background-color: transparent;
+            cursor: default;
+        }
+
+        .day.completed {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--text-dark);
+        }
+
+        .day.completed::after {
+            content: '✓';
+            position: absolute;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .day.current {
+            border: 2px solid var(--primary-color);
+        }
+
+        .day.missed {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        .day.missed::after {
+            content: '✕';
+            position: absolute;
+            font-size: 1.2rem;
+            color: #f44336;
+        }
+
+        /* Footer Section */
+        footer {
+            background-color: var(--text-dark);
+            color: var(--white);
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--white);
+            font-size: 1.2rem;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--white);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transform: translateY(-20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            color: var(--black);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--card-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .habits-container,
+            .streak-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--white);
+                flex-direction: column;
+                gap: 0;
+                box-shadow: var(--shadow);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links a {
+                padding: 1rem;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .calendar-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            section {
+                padding: 3rem 1rem;
+            }
+            
+            .hero {
+                padding: 5rem 1rem;
+            }
+            
+            .days-grid {
+                gap: 0.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span>🧘</span>
+                <span>HabitTracker</span>
+            </a>
+            <nav>
+                <div class="nav-links">
+                    <a href="#home" class="active">Home</a>
+                    <a href="#habits">Habits</a>
+                    <a href="#streak">Progress</a>
+                    <a href="#calendar">Monthly View</a>
+                </div>
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Build Better Habits</h1>
+            <p>Track your daily routines. Stay consistent. Improve daily.</p>
+            <a href="#habits" class="btn">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Habit List Section -->
+    <section id="habits" class="habits-section">
+        <div class="container">
+            <div class="habits-header">
+                <h2>Today's Habits</h2>
+                <button class="btn" id="addHabitBtn">➕ Add Habit</button>
+            </div>
+            <div class="habits-container" id="habitsContainer">
+                <!-- Habit cards will be dynamically added here -->
+                <div class="habit-card">
+                    <div class="habit-card-header">
+                        <h3 class="habit-name">Morning Meditation</h3>
+                        <div class="streak-counter">
+                            <i class="fas fa-fire"></i>
+                            <span>5-day streak</span>
+                        </div>
+                    </div>
+                    <div class="habit-checkbox">
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span class="custom-checkbox"></span>
+                            Mark as done
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="habit-card done">
+                    <div class="habit-card-header">
+                        <h3 class="habit-name">Drink 8 Glasses of Water</h3>
+                        <div class="streak-counter">
+                            <i class="fas fa-fire"></i>
+                            <span>12-day streak</span>
+                        </div>
+                    </div>
+                    <div class="habit-checkbox">
+                        <label class="checkbox-label">
+                            <input type="checkbox" checked>
+                            <span class="custom-checkbox"></span>
+                            Completed today
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="habit-card">
+                    <div class="habit-card-header">
+                        <h3 class="habit-name">30 Min Exercise</h3>
+                        <div class="streak-counter">
+                            <i class="fas fa-fire"></i>
+                            <span>3-day streak</span>
+                        </div>
+                    </div>
+                    <div class="habit-checkbox">
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span class="custom-checkbox"></span>
+                            Mark as done
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Streak & Progress Section -->
+    <section id="streak" class="streak-section">
+        <div class="container">
+            <h2>Your Streaks</h2>
+            <div class="streak-container">
+                <div class="streak-card">
+                    <div class="streak-title">
+                        <h3>Morning Meditation</h3>
+                        <div class="streak-counter">
+                            <i class="fas fa-fire"></i>
+                            <span>5 days</span>
+                        </div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-labels">
+                            <span>Weekly Progress</span>
+                            <span>71%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 71%"></div>
+                        </div>
+                    </div>
+                    <div class="week-bars">
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 80%"></div>
+                            </div>
+                            <div class="day-label">M</div>
+                        </div>
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 60%"></div>
+                            </div>
+                            <div class="day-label">T</div>
+                        </div>
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 100%"></div>
+                            </div>
+                            <div class="day-label">W</div>
+                        </div>
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 40%"></div>
+                            </div>
+                            <div class="day-label">T</div>
+                        </div>
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 90%"></div>
+                            </div>
+                            <div class="day-label">F</div>
+                        </div>
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 70%"></div>
+                            </div>
+                            <div class="day-label">S</div>
+                        </div>
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 50%"></div>
+                            </div>
+                            <div class="day-label">S</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="streak-card">
+                    <div class="streak-title">
+                        <h3>Drink Water</h3>
+                        <div class="streak-counter">
+                            <i class="fas fa-fire"></i>
+                            <span>12 days</span>
+                        </div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-labels">
+                            <span>Weekly Progress</span>
+                            <span>86%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 86%"></div>
+                        </div>
+                    </div>
+                    <div class="week-bars">
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 100%"></div>
+                            </div>
+                            <div class="day-label">M</div>
+                        </div>
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 100%"></div>
+                            </div>
+                            <div class="day-label">T</div>
+                        </div>
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 100%"></div>
+                            </div>
+                            <div class="day-label">W</div>
+                        </div>
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 100%"></div>
+                            </div>
+                            <div class="day-label">T</div>
+                        </div>
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 80%"></div>
+                            </div>
+                            <div class="day-label">F</div>
+                        </div>
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 70%"></div>
+                            </div>
+                            <div class="day-label">S</div>
+                        </div>
+                        <div class="day-bar">
+                            <div class="bar">
+                                <div class="bar-fill" style="height: 50%"></div>
+                            </div>
+                            <div class="day-label">S</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Monthly View Section -->
+    <section id="calendar" class="calendar-section">
+        <div class="container">
+            <h2>Monthly Overview</h2>
+            <div class="calendar-header">
+                <h3>June 2025</h3>
+                <div class="calendar-nav">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-chevron-left"></i> Prev
+                    </button>
+                    <button class="btn">
+                        Today
+                    </button>
+                    <button class="btn btn-outline">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="calendar">
+                <div class="weekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+                <div class="days-grid">
+                    <div class="day empty"></div>
+                    <div class="day empty"></div>
+                    <div class="day completed">1</div>
+                    <div class="day completed">2</div>
+                    <div class="day completed">3</div>
+                    <div class="day completed">4</div>
+                    <div class="day completed">5</div>
+                    <div class="day completed">6</div>
+                    <div class="day completed">7</div>
+                    <div class="day completed">8</div>
+                    <div class="day completed">9</div>
+                    <div class="day completed">10</div>
+                    <div class="day completed">11</div>
+                    <div class="day completed">12</div>
+                    <div class="day completed">13</div>
+                    <div class="day completed">14</div>
+                    <div class="day completed">15</div>
+                    <div class="day completed">16</div>
+                    <div class="day completed">17</div>
+                    <div class="day completed">18</div>
+                    <div class="day completed">19</div>
+                    <div class="day completed">20</div>
+                    <div class="day current">21</div>
+                    <div class="day">22</div>
+                    <div class="day">23</div>
+                    <div class="day">24</div>
+                    <div class="day">25</div>
+                    <div class="day">26</div>
+                    <div class="day">27</div>
+                    <div class="day">28</div>
+                    <div class="day">29</div>
+                    <div class="day">30</div>
+                    <div class="day empty"></div>
+                    <div class="day empty"></div>
+                    <div class="day empty"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+            </div>
+            <p class="copyright">© 2025 HabitTracker. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Add Habit Modal -->
+    <div class="modal-overlay" id="addHabitModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add New Habit</h3>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="habitName">Habit Name</label>
+                    <input type="text" id="habitName" placeholder="e.g., Morning Meditation">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="cancelBtn">Cancel</button>
+                <button class="btn" id="saveHabitBtn">Save Habit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">Habit added successfully!</div>
+
+    <script>
+        // DOM Elements
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const hamburger = document.querySelector('.hamburger');
+        const mobileNav = document.querySelector('.nav-links');
+        const addHabitBtn = document.getElementById('addHabitBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const saveHabitBtn = document.getElementById('saveHabitBtn');
+        const addHabitModal = document.getElementById('addHabitModal');
+        const habitNameInput = document.getElementById('habitName');
+        const habitsContainer = document.getElementById('habitsContainer');
+        const toast = document.getElementById('toast');
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+        // Toggle Mobile Menu
+        hamburger.addEventListener('click', () => {
+            mobileNav.classList.toggle('active');
+        });
+
+        // Add active class to nav links on click
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                // Remove active class from all links
+                navLinks.forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                e.target.classList.add('active');
+                
+                // Close mobile menu if open
+                mobileNav.classList.remove('active');
+            });
+        });
+
+        // Show Add Habit Modal
+        addHabitBtn.addEventListener('click', () => {
+            addHabitModal.classList.add('active');
+            habitNameInput.focus();
+        });
+
+        // Close Modal
+        function closeModal() {
+            addHabitModal.classList.remove('active');
+            habitNameInput.value = '';
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        // Save New Habit
+        saveHabitBtn.addEventListener('click', () => {
+            const habitName = habitNameInput.value.trim();
+            
+            if (habitName) {
+                // Create new habit card
+                const habitCard = document.createElement('div');
+                habitCard.className = 'habit-card';
+                habitCard.innerHTML = `
+                    <div class="habit-card-header">
+                        <h3 class="habit-name">${habitName}</h3>
+                        <div class="streak-counter">
+                            <i class="fas fa-fire"></i>
+                            <span>0-day streak</span>
+                        </div>
+                    </div>
+                    <div class="habit-checkbox">
+                        <label class="checkbox-label">
+                            <input type="checkbox">
+                            <span class="custom-checkbox"></span>
+                            Mark as done
+                        </label>
+                    </div>
+                `;
+                
+                // Add to container
+                habitsContainer.prepend(habitCard);
+                
+                // Show toast notification
+                showToast('Habit added successfully!');
+                
+                // Close modal
+                closeModal();
+                
+                // Add event listener to new checkbox
+                const newCheckbox = habitCard.querySelector('input[type="checkbox"]');
+                newCheckbox.addEventListener('change', toggleHabitStatus);
+            }
+        });
+
+        // Toggle habit done status
+        function toggleHabitStatus(e) {
+            const card = e.target.closest('.habit-card');
+            if (e.target.checked) {
+                card.classList.add('done');
+                showToast('Habit marked as done!');
+            } else {
+                card.classList.remove('done');
+            }
+        }
+
+        // Add event listeners to all checkboxes
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', toggleHabitStatus);
+        });
+
+        // Show Toast Notification
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Highlight active section on scroll
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.scrollY;
+            
+            // Highlight nav link based on scroll position
+            document.querySelectorAll('section').forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
